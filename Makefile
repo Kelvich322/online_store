@@ -1,6 +1,6 @@
 DC := docker compose run --rm
 
-.PHONY: test lint
+.PHONY: test lint start stop
 
 test-order:
 	$(DC) order-service pytest -vv
@@ -12,10 +12,10 @@ create-migration-order:
 	$(DC) order-service bash -c "alembic revision --autogenerate"
 
 setup-database-order:
-	$(DC) bash -c "alembic upgrade head"
+	$(DC) order-service alembic upgrade head
 
 start: setup-database-order
-	$(DC) up -d
+	docker compose up -d
 
 stop:
-	$(DC) down
+	docker compose down
