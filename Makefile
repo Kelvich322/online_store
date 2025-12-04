@@ -12,7 +12,7 @@ create-migration-order:
 	$(DC) order-service bash -c "alembic revision --autogenerate"
 
 setup-database-order:
-	$(DC) order-service alembic upgrade head
+	$(DC) order-service alembic upgrade head && $(DC) payment-service alembic upgrade head 
 
 start: setup-database-order
 	docker compose up -d

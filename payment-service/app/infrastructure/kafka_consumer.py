@@ -68,6 +68,7 @@ class KafkaConsumer:
                 )
 
                 if not batch:
+                    print("Messages not found")
                     continue
 
                 for tp, messages in batch.items():
@@ -83,8 +84,6 @@ class KafkaConsumer:
 
         if value is None:
             return
-        
-        # TODO: Реализовать обработку(валидацию) сообщений, возможно, вынести логику
         
         await self._handler(value)       
 

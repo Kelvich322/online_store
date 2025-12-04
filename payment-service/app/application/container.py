@@ -13,11 +13,12 @@ class ApplicationContainer(containers.DeclarativeContainer):
     )
 
     create_payment_use_case = providers.Singleton[CreatePaymentUseCase](
-        CreatePaymentUseCase, 
+        CreatePaymentUseCase,
         unit_of_work=infrastructure_container.unit_of_work,
         kafka_producer=infrastructure_container.kafka_producer,
     )
     process_inbox_events_use_case = providers.Singleton[ProcessInboxEventsUseCase](
         ProcessInboxEventsUseCase,
         unit_of_work=infrastructure_container.unit_of_work,
+        create_payment_use_case=create_payment_use_case,
     )
