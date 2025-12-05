@@ -38,5 +38,5 @@ class ProcessInboxEventsUseCase:
             return inbox_event
 
     async def handle_message(self, message: dict) -> None:
-        inbox_event = InboxDTO(order_id=message["order_id"], payload=message["payload"])
+        inbox_event = InboxDTO(order_id=message["payload"]["id"], payload=message["payload"])
         await self(inbox_event)

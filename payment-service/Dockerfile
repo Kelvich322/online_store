@@ -1,6 +1,6 @@
 FROM python:3.12
 
-WORKDIR /payment-service
+WORKDIR /app
 
 COPY requirements.txt .
 

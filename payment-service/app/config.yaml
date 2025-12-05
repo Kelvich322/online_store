@@ -1,9 +1,9 @@
 infrastructure:
   db:
-    dsn: postgresql+asyncpg://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT:543}/${DB_NAME}
+    dsn: postgresql+asyncpg://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT:5432}/${DB_NAME}
     pool_size: 15
     pool_recycle: 1800
   kafka:
     bootstrap_servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
-    topic_produce: ${KAFKA_TOPIC:payments}
-    topic_consume: ${KAFKA_TOPIC:orders}
+    topic_produce: ${KAFKA_PRODUCE_TOPIC:payments}
+    topic_consume: ${KAFKA_CONSUME_TOPIC:orders}

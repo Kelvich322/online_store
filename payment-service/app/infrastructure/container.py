@@ -33,5 +33,5 @@ class InfrastructureContainer(containers.DeclarativeContainer):
         KafkaConsumer,
         bootstrap_servers=config.kafka.bootstrap_servers,
         topic=config.kafka.topic_consume,
-        enable_auto_commit = True,
+        enable_auto_commit = False,
     )

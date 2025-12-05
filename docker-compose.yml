@@ -33,7 +33,9 @@ services:
       DB_HOST: payment-database
       DB_NAME: dev
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      KAFKA_TOPIC: payments
+      environment:
+      KAFKA_PRODUCE_TOPIC: payments
+      KAFKA_CONSUME_TOPIC: orders 
       PYTHONASYNCIODEBUG: "1"
     depends_on:
       payment-database:

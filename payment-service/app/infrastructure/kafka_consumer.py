@@ -26,6 +26,9 @@ class KafkaConsumer:
         self._is_running: bool = False
 
     async def start(self) -> None:
+        print(f"🔧 DEBUG: Starting consumer for topic '{self._topic}'")
+        print(f"🔧 DEBUG: Handler is {'set' if self._handler else 'NOT set'}")
+
         if self._consumer is not None:
             raise RuntimeError("Consumer is already started")
         
@@ -35,7 +38,11 @@ class KafkaConsumer:
         self._consumer = AIOKafkaConsumer(
             self._topic,
             bootstrap_servers=self._bootstrap_servers,
+            # group_id=f"{self._topic}-consumer-group",
             auto_offset_reset=self._auto_offset_reset,
+            session_timeout_ms=10000,
+            heartbeat_interval_ms=3000,
+            metadata_max_age_ms=5000,
             enable_auto_commit=self._enable_auto_commit,
             max_poll_records=self._max_poll_records,
             max_poll_interval_ms=self._max_poll_interval_ms,
@@ -73,6 +80,7 @@ class KafkaConsumer:
 
                 for tp, messages in batch.items():
                     for message in messages:
+                        print(f"Start proccessing message: {message}")
                         await self._process_message(message)
                         
             except Exception as e:
