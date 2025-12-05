@@ -16,7 +16,7 @@ services:
       database:
         condition: service_healthy
       kafka:
-        condition: service_started
+        condition: service_healthy
     networks:
       - store-network
     volumes:
@@ -41,7 +41,7 @@ services:
       payment-database:
         condition: service_healthy
       kafka:
-        condition: service_started
+        condition: service_healthy
     networks:
       - store-network
     volumes:
@@ -98,6 +98,12 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
       KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
       CLUSTER_ID: lQqfG8S9QOqC4eY1vQj9Lw
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-broker-api-versions --bootstrap-server kafka:9092"]
+      interval: 10s
+      timeout: 30s
+      retries: 999
+      start_period: 45s
     networks:
       - store-network
 
