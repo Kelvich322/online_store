@@ -30,7 +30,7 @@ def get_url():
     """Get database URL from environment variables"""
     db_user = os.getenv("DB_USER", "dev")
     db_pass = os.getenv("DB_PASS", "store")
-    db_host = os.getenv("DB_HOST", "database")
+    db_host = os.getenv("DB_HOST", "payment-database")
     db_name = os.getenv("DB_NAME", "dev")
     return f"postgresql://{db_user}:{db_pass}@{db_host}:5432/{db_name}"
 

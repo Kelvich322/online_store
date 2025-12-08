@@ -16,13 +16,10 @@ class ProcessInboxEventsUseCase:
 
     async def __call__(self, inbox_event: InboxDTO) -> InboxPayments:
         async with self._unit_of_work() as uow:
-            # Проверяем, есть ли сообщение в inbox
             existing_event = await uow.inbox.get_by_id(inbox_event.order_id)
             if existing_event:
-                # Если сообщение уже обработано, пропускаем
                 return existing_event
 
-            # Если сообщения нет, создаем новое
             payload = {
                 "order_id": inbox_event.order_id,
                 "payload": inbox_event.payload
@@ -30,7 +27,6 @@ class ProcessInboxEventsUseCase:
 
             inbox_event = await uow.inbox.create(payload)
 
-            # Создаем платеж
             order_dto = OrderDTO(order_id=inbox_event.order_id, amount=inbox_event.payload["amount"])
             await self._create_payment_use_case(order_dto)
 

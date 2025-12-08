@@ -40,14 +40,20 @@ class CreatePaymentUseCase:
 
                 payment = await uow.payments.create(payload)
 
+                message = {
+                            "orderId": payment.order_id,
+                            "event_type": payment.status,
+                            "created_at": payment.created_at.isoformat()
+                        }
+                if payment.status == PaymentStatusEnum.PAID:
+                    message["amount"] = payment.amount
+                else:
+                    message["reason"] = "SOME_REASON"
+
                 try:
                     await kp.send_message(
                         topic=status.topic,
-                        message={
-                            "event_type": status,
-                            "payload": payload,
-                            "created_at": payment.created_at.isoformat()
-                        }
+                        message=message
                     )
                 except Exception as e:
                     print(f"Failed to payment order {order.order_id} and send event {payment.id}: {e}")
