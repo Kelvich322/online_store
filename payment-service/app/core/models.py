@@ -9,6 +9,10 @@ class PaymentStatusEnum(StrEnum):
     PAID = "PAID"
     CANCELLED = "CANCELLED"
 
+    @property
+    def topic(self) -> str:
+        return "cancels" if self == PaymentStatusEnum.CANCELLED else "payments"
+
 
 class Payment(BaseModel):
     id: str

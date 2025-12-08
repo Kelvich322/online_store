@@ -34,7 +34,7 @@ class CreatePaymentUseCase:
                 
                 payload = {
                     "order_id": order.order_id,
-                    "amount": order.amount,
+                    "amount": str(order.amount),
                     "status": status
                 }
 
@@ -42,6 +42,7 @@ class CreatePaymentUseCase:
 
                 try:
                     await kp.send_message(
+                        topic=status.topic,
                         message={
                             "event_type": status,
                             "payload": payload,

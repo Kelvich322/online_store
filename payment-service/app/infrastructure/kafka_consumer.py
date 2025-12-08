@@ -27,7 +27,7 @@ class KafkaConsumer:
 
     async def start(self) -> None:
         print(f"🔧 DEBUG: Starting consumer for topic '{self._topic}'")
-        print(f"🔧 DEBUG: Handler is {'set' if self._handler else 'NOT set'}")
+        print(f"🔧 DEBUG: Handler is {'set' if self._handler else 'NOT set'}") # TODO: Заменить на логер
 
         if self._consumer is not None:
             raise RuntimeError("Consumer is already started")
@@ -75,16 +75,15 @@ class KafkaConsumer:
                 )
 
                 if not batch:
-                    print("Messages not found")
                     continue
 
                 for tp, messages in batch.items():
                     for message in messages:
-                        print(f"Start proccessing message: {message}")
+                        print(f"Start proccessing message: {message}") # TODO: Заменить на логер
                         await self._process_message(message)
                         
             except Exception as e:
-                    print(f"Error in consumption loop: {e}")
+                    print(f"Error in consumption loop: {e}") # TODO: Заменить на логер
                     await asyncio.sleep(1)
 
     async def _process_message(self, message: ConsumerRecord) -> None:
