@@ -33,10 +33,10 @@ services:
       DB_HOST: payment-database
       DB_NAME: dev
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      environment:
       KAFKA_PRODUCE_TOPIC: payments
       KAFKA_CONSUME_TOPIC: orders 
       PYTHONASYNCIODEBUG: "1"
+      PYTHONUNBUFFERED: "1"
     depends_on:
       payment-database:
         condition: service_healthy
@@ -46,6 +46,16 @@ services:
       - store-network
     volumes:
       - ./payment-service:/app
+
+  shipping-service:
+    build: ./shipping-service/.
+    ports:
+      - "8002:8002"
+    command: "python bin/main.py"
+    networks:
+      - store-network
+    volumes:
+      - ./shipping-service:/app
 
   database:
     image: postgres
