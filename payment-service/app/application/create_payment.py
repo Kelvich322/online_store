@@ -3,9 +3,9 @@ from decimal import Decimal
 
 from pydantic import BaseModel
 
-from app.core.models import PaymentStatusEnum, Payment
-from app.infrastructure.unit_of_work import UnitOfWork
+from app.core.models import Payment, PaymentStatusEnum
 from app.infrastructure.kafka_producer import KafkaProducer
+from app.infrastructure.unit_of_work import UnitOfWork
 
 
 class OrderDTO(BaseModel):
@@ -14,50 +14,42 @@ class OrderDTO(BaseModel):
 
 
 class CreatePaymentUseCase:
-    def __init__(
-        self,
-        unit_of_work: UnitOfWork,
-        kafka_producer: KafkaProducer
-
-    ):
+    def __init__(self, unit_of_work: UnitOfWork, kafka_producer: KafkaProducer):
         self._unit_of_work = unit_of_work
         self._kafka_producer = kafka_producer
 
     async def __call__(self, order: OrderDTO) -> Payment:
         async with self._kafka_producer as kp:
             async with self._unit_of_work() as uow:
-
                 if random.randint(1, 999) % 2 == 1:
                     status = PaymentStatusEnum.PAID
                 else:
                     status = PaymentStatusEnum.CANCELLED
-                
+
                 payload = {
                     "order_id": order.order_id,
                     "amount": str(order.amount),
-                    "status": status
+                    "status": status,
                 }
 
                 payment = await uow.payments.create(payload)
 
                 message = {
-                            "orderId": payment.order_id,
-                            "status": payment.status,
-                            "created_at": payment.created_at.isoformat()
-                        }
+                    "orderId": payment.order_id,
+                    "status": payment.status,
+                    "created_at": payment.created_at.isoformat(),
+                }
                 if payment.status == PaymentStatusEnum.PAID:
                     message["amount"] = payment.amount
                 else:
                     message["reason"] = "SOME_REASON"
 
                 try:
-                    await kp.send_message(
-                        topic=status.topic,
-                        message=message
-                    )
+                    await kp.send_message(topic=status.topic, message=message)
                 except Exception as e:
-                    print(f"Failed to payment order {order.order_id} and send event {payment.id}: {e}")
+                    print(
+                        f"Failed to payment order {order.order_id} and send event {payment.id}: {e}"
+                    )
 
                 await uow.commit()
                 return payment
-

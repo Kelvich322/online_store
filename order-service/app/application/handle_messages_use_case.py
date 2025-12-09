@@ -1,7 +1,8 @@
 from pydantic import BaseModel
 
-from app.infrastructure.unit_of_work import UnitOfWork
 from app.core.models import OrderStatusEnum
+from app.infrastructure.unit_of_work import UnitOfWork
+
 
 class HandlerDTO(BaseModel):
     order_id: str

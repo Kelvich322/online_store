@@ -1,11 +1,11 @@
 import asyncio
 import json
-from typing import Any, Awaitable, Callable, Optional, List
+from typing import Any, Awaitable, Callable, List, Optional
 
 from aiokafka import AIOKafkaConsumer, ConsumerRecord
 
-from app.core.models import OrderStatusEnum
 from app.application.handle_messages_use_case import HandlerDTO
+from app.core.models import OrderStatusEnum
 
 
 class KafkaConsumer:
@@ -30,11 +30,13 @@ class KafkaConsumer:
 
     async def start(self) -> None:
         print(f"🔧 DEBUG: Starting consumer for topics: {self._topics}")
-        print(f"🔧 DEBUG: Handler is {'set' if self._handler else 'NOT set'}")  # TODO: Заменить на логер
+        print(
+            f"🔧 DEBUG: Handler is {'set' if self._handler else 'NOT set'}"
+        )  # TODO: Заменить на логер
 
         if self._consumer is not None:
             raise RuntimeError("Consumer is already started")
-        
+
         if not self._handler:
             raise RuntimeError("Message handler is not set. Call set_handler() first")
 
@@ -63,7 +65,7 @@ class KafkaConsumer:
     async def set_handler(self, handler: Callable[[Any], Awaitable[None]]) -> None:
         if not asyncio.iscoroutinefunction(handler):
             raise TypeError("Handler must be an async function")
-        
+
         self._handler = handler
 
     async def consume_messages(self) -> None:
@@ -73,8 +75,7 @@ class KafkaConsumer:
         while self._is_running:
             try:
                 batch = await self._consumer.getmany(
-                    timeout_ms=1000,
-                    max_records=self._max_poll_records
+                    timeout_ms=1000, max_records=self._max_poll_records
                 )
 
                 if not batch:
@@ -83,9 +84,11 @@ class KafkaConsumer:
                 for tp, messages in batch.items():
                     topic = tp.topic
                     for message in messages:
-                        print(f"Start processing message from topic '{topic}': {message}") # TODO: Заменить на логер
+                        print(
+                            f"Start processing message from topic '{topic}': {message}"
+                        )  # TODO: Заменить на логер
                         await self._process_message(message)
-                        
+
             except Exception as e:
                 print(f"Error in consumption loop: {e}")  # TODO: Заменить на логер
                 await asyncio.sleep(1)
@@ -97,8 +100,7 @@ class KafkaConsumer:
             return
         try:
             message = HandlerDTO(
-                order_id=value["orderId"],
-                status=OrderStatusEnum(value["status"])
+                order_id=value["orderId"], status=OrderStatusEnum(value["status"])
             )
 
             await self._handler(message)
@@ -108,6 +110,6 @@ class KafkaConsumer:
     async def __aenter__(self):
         await self.start()
         return self
-    
+
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self.stop()

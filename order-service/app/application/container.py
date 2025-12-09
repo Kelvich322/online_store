@@ -1,8 +1,8 @@
 from dependency_injector import containers, providers
 
 from app.application.create_order import CreateOrderUseCase
-from app.application.process_outbox_events import ProcessOutboxEventsUseCase
 from app.application.handle_messages_use_case import HandleMessagesUseCase
+from app.application.process_outbox_events import ProcessOutboxEventsUseCase
 from app.infrastructure.container import InfrastructureContainer
 
 

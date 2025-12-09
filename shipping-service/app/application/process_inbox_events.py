@@ -1,8 +1,9 @@
 from pydantic import BaseModel
 
+from app.application.create_shipment import CreateShipmentUseCase, OrderDTO
 from app.core.models import InboxShipments
 from app.infrastructure.unit_of_work import UnitOfWork
-from app.application.create_shipment import CreateShipmentUseCase, OrderDTO
+
 
 class InboxDTO(BaseModel):
     order_id: str
@@ -10,7 +11,9 @@ class InboxDTO(BaseModel):
 
 
 class ProcessInboxEventsUseCase:
-    def __init__(self, unit_of_work: UnitOfWork, create_payment_use_case: CreateShipmentUseCase):
+    def __init__(
+        self, unit_of_work: UnitOfWork, create_payment_use_case: CreateShipmentUseCase
+    ):
         self._unit_of_work = unit_of_work
         self._create_shipment_use_case = create_payment_use_case
 
@@ -20,10 +23,7 @@ class ProcessInboxEventsUseCase:
             if existing_event:
                 return existing_event
 
-            payload = {
-                "order_id": inbox_event.order_id,
-                "payload": inbox_event.payload
-            }
+            payload = {"order_id": inbox_event.order_id, "payload": inbox_event.payload}
 
             inbox_event = await uow.inbox.create(payload)
 

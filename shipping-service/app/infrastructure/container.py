@@ -4,8 +4,8 @@ from dependency_injector import containers, providers
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.infrastructure.kafka_producer import KafkaProducer
 from app.infrastructure.kafka_consumer import KafkaConsumer
+from app.infrastructure.kafka_producer import KafkaProducer
 from app.infrastructure.unit_of_work import UnitOfWork
 
 
@@ -16,7 +16,7 @@ class InfrastructureContainer(containers.DeclarativeContainer):
         config.db.dsn,
         pool_size=config.db.pool_size,
         pool_recycle=config.db.pool_recycle,
-        future=True
+        future=True,
     )
     session_factory: Callable[..., AsyncSession] = providers.Factory(
         sessionmaker, async_engine, expire_on_commit=False, class_=AsyncSession
@@ -33,5 +33,5 @@ class InfrastructureContainer(containers.DeclarativeContainer):
         KafkaConsumer,
         bootstrap_servers=config.kafka.bootstrap_servers,
         topic=config.kafka.topic_consume,
-        enable_auto_commit = False,
+        enable_auto_commit=False,
     )

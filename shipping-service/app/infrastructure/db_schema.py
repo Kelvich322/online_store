@@ -1,17 +1,9 @@
 import uuid
 
-from app.infrastructure.utils import generate_ship_code
-
-from sqlalchemy import (
-    JSON,
-    UUID,
-    Column,
-    DateTime,
-    Text,
-    func
-)
+from sqlalchemy import JSON, UUID, Column, DateTime, Text, func
 from sqlalchemy.ext.declarative import declarative_base
 
+from app.infrastructure.utils import generate_ship_code
 
 Base = declarative_base()
 

@@ -23,24 +23,20 @@ class KafkaProducer:
             await self._producer.stop()
 
     async def send_message(
-            self,
-            message: dict[str, Any],
-            key: str | None = None,
-            topic: str | None = None,
+        self,
+        message: dict[str, Any],
+        key: str | None = None,
+        topic: str | None = None,
     ) -> None:
         if not self._producer:
             raise RuntimeError("Producer is not started. Call start() first.")
-        
+
         target_topic = topic or self._topic
-        await self._producer.send_and_wait(
-            topic=target_topic,
-            value=message,
-            key=key
-        )
+        await self._producer.send_and_wait(topic=target_topic, value=message, key=key)
 
     async def __aenter__(self):
         await self.start()
         return self
-    
+
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self.stop()

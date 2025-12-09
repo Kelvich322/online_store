@@ -4,8 +4,8 @@ from dependency_injector import containers, providers
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.infrastructure.kafka_producer import KafkaProducer
 from app.infrastructure.kafka_consumer import KafkaConsumer
+from app.infrastructure.kafka_producer import KafkaProducer
 from app.infrastructure.unit_of_work import UnitOfWork
 
 
@@ -38,5 +38,5 @@ class InfrastructureContainer(containers.DeclarativeContainer):
         KafkaConsumer,
         bootstrap_servers=config.kafka.bootstrap_servers,
         topics=kafka_topics,
-        enable_auto_commit = False,
+        enable_auto_commit=False,
     )

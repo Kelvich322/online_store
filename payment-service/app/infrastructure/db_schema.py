@@ -1,16 +1,7 @@
 import uuid
 
-from sqlalchemy import (
-    DECIMAL,
-    JSON,
-    UUID,
-    Column,
-    DateTime,
-    Text,
-    func
-)
+from sqlalchemy import DECIMAL, JSON, UUID, Column, DateTime, Text, func
 from sqlalchemy.ext.declarative import declarative_base
-
 
 Base = declarative_base()
 

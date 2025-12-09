@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
-from app.infrastructure.repositories import ShipmentsRepository, InboxRepository
+from app.infrastructure.repositories import InboxRepository, ShipmentsRepository
 
 
 class UnitOfWork:
@@ -19,7 +19,7 @@ class UnitOfWork:
                 await session.rollback()
                 raise
 
-    
+
 class _UnitOfWorkImplementation:
     def __init__(self, session: AsyncSession):
         self._session = session
@@ -29,10 +29,10 @@ class _UnitOfWorkImplementation:
     @property
     def shipments(self) -> ShipmentsRepository:
         return self._shipments_repo
-    
+
     @property
     def inbox(self) -> InboxRepository:
         return self._inbox_repo
-    
+
     async def commit(self):
         await self._session.commit()
