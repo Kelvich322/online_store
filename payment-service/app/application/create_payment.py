@@ -42,7 +42,7 @@ class CreatePaymentUseCase:
 
                 message = {
                             "orderId": payment.order_id,
-                            "event_type": payment.status,
+                            "status": payment.status,
                             "created_at": payment.created_at.isoformat()
                         }
                 if payment.status == PaymentStatusEnum.PAID:

@@ -32,7 +32,7 @@ class CreateShipmentUseCase:
                 try:
                     await kp.send_message(
                         message={
-                            "orderID": shipment.orderId,
+                            "orderId": shipment.orderId,
                             "status": shipment.status,
                             "trackingNumber": shipment.trackingNumber,
                             "created_at": shipment.created_at.isoformat()

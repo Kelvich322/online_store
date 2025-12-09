@@ -136,6 +136,20 @@ class OrderRepository:
             raise ValueError(f"Order with id {order_id} not found")
 
         return self._construct(row)
+    
+    async def create_order_status(self, order_id: str, status: OrderStatusEnum):
+        stmt_status = (
+            insert(order_statuses_tbl)
+            .values(
+                {
+                    "order_id": order_id,
+                    "status": status,
+                }
+            )
+            .returning(literal_column("*"))
+        )
+        await self._session.execute(stmt_status)
+
 
 
 class OutboxRepository:

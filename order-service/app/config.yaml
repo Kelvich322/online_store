@@ -5,4 +5,7 @@ infrastructure:
     pool_recycle: 1800
   kafka:
     bootstrap_servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
-    topic: ${KAFKA_TOPIC:orders}
+    topic_produce: ${KAFKA_PRODUCE_TOPIC:orders}
+    topic_consume_payments: ${KAFKA_CONSUME_TOPIC_PAYMENTS:payments}
+    topic_consume_shipments: ${KAFKA_CONSUME_TOPIC_SHIPMENTS:shipments}
+    topic_consume_cancels: ${KAFKA_CONSUME_TOPIC_CANCELS:cancels}

@@ -10,8 +10,12 @@ services:
       DB_HOST: database
       DB_NAME: dev
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      KAFKA_TOPIC: orders
+      KAFKA_PRODUCE_TOPIC: orders
+      KAFKA_CONSUME_TOPIC_PAYMENTS: payments
+      KAFKA_CONSUME_TOPIC_CANCELS: cancels
+      KAFKA_CONSUME_TOPIC_SHIPMENTS: shipments
       PYTHONASYNCIODEBUG: "1"
+      PYTHONUNBUFFERED: "1"
     depends_on:
       database:
         condition: service_healthy

@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engin
 from sqlalchemy.orm import sessionmaker
 
 from app.infrastructure.kafka_producer import KafkaProducer
+from app.infrastructure.kafka_consumer import KafkaConsumer
 from app.infrastructure.unit_of_work import UnitOfWork
 
 
@@ -26,5 +27,16 @@ class InfrastructureContainer(containers.DeclarativeContainer):
     kafka_producer = providers.Singleton[KafkaProducer](
         KafkaProducer,
         bootstrap_servers=config.kafka.bootstrap_servers,
-        topic=config.kafka.topic,
+        topic=config.kafka.topic_produce,
+    )
+    kafka_topics = providers.List(
+        config.kafka.topic_consume_payments,
+        config.kafka.topic_consume_shipments,
+        config.kafka.topic_consume_cancels,
+    )
+    kafka_consumer = providers.Singleton[KafkaConsumer](
+        KafkaConsumer,
+        bootstrap_servers=config.kafka.bootstrap_servers,
+        topics=kafka_topics,
+        enable_auto_commit = False,
     )
